@@ -9,6 +9,8 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import Events.KeyTypedEvent;
+import Events.MouseClickedEvent;
 import Events.MouseWheelMovedEvent;
 
 public class MouseManager implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -17,11 +19,13 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 	public static boolean leftRelease, rightRelease;
 	public static int mouseX, mouseY, mouseScroll;
 	List<MouseWheelMovedEvent> listeners;
+	List<MouseClickedEvent> clickListeners;
 	
 	public MouseManager(){
 		this.listeners = new ArrayList<>();
 	}
 	public void addMouseWheelEvent(MouseWheelMovedEvent listener) { listeners.add(listener); }
+	public void addMouseClickEvent(MouseClickedEvent listener) { clickListeners.add(listener); }
 	
 	// Implemented methods
 	
@@ -52,7 +56,10 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 		mouseY = e.getY();
 	}
 	@Override
-	public void mouseClicked(MouseEvent e){}
+	public void mouseClicked(MouseEvent e){
+		for(MouseClickedEvent listener:clickListeners)
+			listener.mouseClicked(e);
+	}
 	@Override
 	public void mouseEntered(MouseEvent e){}
 	@Override
