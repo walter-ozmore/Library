@@ -23,6 +23,7 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 	
 	public MouseManager(){
 		this.listeners = new ArrayList<>();
+		this.clickListeners = new ArrayList<>();
 	}
 	public void addMouseWheelEvent(MouseWheelMovedEvent listener) { listeners.add(listener); }
 	public void addMouseClickEvent(MouseClickedEvent listener) { clickListeners.add(listener); }
