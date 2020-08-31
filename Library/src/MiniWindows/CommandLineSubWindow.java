@@ -27,7 +27,6 @@ public class CommandLineSubWindow extends SubWindow implements KeyTypedEvent{
 		g.setColor(Color.white);
 		String ex = ""; if(flash<30) ex="_"; flash++; if(flash>60) flash = 0; //Flash the line
 		g.drawString(type+ex, 5, height-5);
-		
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {

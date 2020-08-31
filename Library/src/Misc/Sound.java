@@ -39,6 +39,7 @@ public class Sound extends Thread {
 			if(loop) clip.loop(Clip.LOOP_CONTINUOUSLY);
 			setVolume(vol*SoundManager.getVolume());
 			clip.start();
+			while(clip.isRunning());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

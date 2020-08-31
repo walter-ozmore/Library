@@ -38,6 +38,7 @@ public class Mat {
 		System.out.println();
 	}
 	public static Boolean isNum(String num) {
+		if(num.length()==0) return false;
 		for(int z=0;z<num.length();z++)
 			switch(num.charAt(z)) {
 				case '0':break;

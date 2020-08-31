@@ -23,7 +23,6 @@ public class SoundManager {
 		sound.loop = true;
 		sounds.add(sound);
 		sound.start();
-		System.out.println("Playing sound");
 	}
 	public static void playDelayedSound(String location, long sleep) {
 		sounds.add(new Sound(location, sleep));
@@ -53,5 +52,11 @@ public class SoundManager {
 				s.play();
 	}
 	public static float getVolume() { return volume; };
+	public static long getSoundsSize() {
+		for(int z=0;z<sounds.size();z++)
+			if(!sounds.get(z).isAlive())
+				sounds.remove(z--);
+		return sounds.size();
+	}
 }
 

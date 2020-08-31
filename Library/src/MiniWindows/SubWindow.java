@@ -1,5 +1,7 @@
 package MiniWindows;
 
+import java.awt.image.BufferedImage;
+
 import Misc.Graphics;
 
 public abstract class SubWindow {
@@ -10,6 +12,7 @@ public abstract class SubWindow {
 		drawDefaultBackground = false;
 	protected int x=0, y=0, width=100, height=100;
 	protected String name = "";
+	protected BufferedImage renderImage;
 	
 	public void tick() {}
 	public void render(Graphics g) {}

@@ -79,9 +79,9 @@ public class Graphics {
 		g.setColor(strColor);
 		drawString(str, x, y);
 	}
-	public void drawLine(double x1, double y1, double x2, double y2) {
-		g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
-	}
+	public void drawLine(double x1, double y1, double x2, double y2) { g.drawLine((int)x1, (int)y1, (int)x2, (int)y2); }
+	public void drawLine(Point point,Point point2) { g.drawLine((int)point.getX(), (int)point.getY(), (int)point2.getX(), (int)point2.getY()); }
+	public void drawLine(DataPoint point,DataPoint point2) { g.drawLine((int)point.x, (int)point.y, (int)point2.x, (int)point2.y); }
 	public void drawRLine(double x1, double y1, double x2, double y2) {
 		x2 = x2+x1;
 		y2 = y2+y1;
