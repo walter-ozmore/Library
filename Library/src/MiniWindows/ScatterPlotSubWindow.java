@@ -5,7 +5,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import Misc.DataPoint;
 import Misc.Graphics;
@@ -18,8 +22,12 @@ public class ScatterPlotSubWindow extends SubWindow {
 		width = 1500;
 		height = 800;
 		//x=y;
-		drawDefaultBackground = false;
+		drawDefaultBackground = true;
 		titleBar = true;
+		name = "Scatter Plot";
+		try { icon = ImageIO.read(new File("C:\\Users\\souls\\git\\Library\\Library\\res\\Icons.png")).getSubimage(14, 0, 14, 14);
+		} catch (IOException e) { System.out.println("FILE NOT FOUND: WindowIcon.png"); }
+		
 	}
 	double maxX = 1, maxY = 1;
 	double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;

@@ -11,8 +11,11 @@ public abstract class SubWindow {
 		selected = false,
 		drawDefaultBackground = false;
 	protected int x=0, y=0, width=100, height=100;
+	static int sid = 0;
+	int id = 0;
 	protected String name = "";
 	protected BufferedImage renderImage;
+	BufferedImage icon = null;
 	
 	public void tick() {}
 	public void render(Graphics g) {}

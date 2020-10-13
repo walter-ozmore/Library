@@ -3,14 +3,18 @@ package MiniWindows;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import Misc.Graphics;
 import Misc.MouseManager;
 import Threading.ThreadManager;
 
 public class SubWindowManager {
-	boolean threaded = true;
+	boolean threaded = false;
 	ArrayList<SubWindow> subWindows;
 	
 	//Holding window vars
@@ -22,16 +26,17 @@ public class SubWindowManager {
 	public Color accentColor = Color.red;
 	
 	//Selected Window
-	SubWindow selectedWindow = null;
+	public SubWindow selectedWindow = null;
 	
 	public SubWindowManager() {
 		init();
 	}
 	void init() {
+		try { defaultWindowIcon = ImageIO.read(new File("C:\\Users\\souls\\git\\Library\\Library\\res\\Icons.png")).getSubimage(0, 0, 14, 14); } catch (IOException e) { System.out.println("FILE NOT FOUND: WindowIcon.png"); }
 		subWindows = new ArrayList<SubWindow>();
 	}
-	public void addSubWindow(SubWindow subWindow) { subWindows.add(subWindow); }
-	public void addSubWindow(SubWindow subWindow,boolean visable) { subWindow.visable = visable; subWindows.add(subWindow); }
+	public void addSubWindow(SubWindow subWindow) { subWindows.add(subWindow); subWindow.id = SubWindow.sid++; }
+	public void addSubWindow(SubWindow subWindow,boolean visable) { subWindow.visable = visable; subWindows.add(subWindow); subWindow.id = SubWindow.sid++; }
 	public void tick() {
 		for(SubWindow sub:subWindows) sub.tick();
 	}
@@ -44,7 +49,6 @@ public class SubWindowManager {
 		if(threaded) {
 			for(SubWindow sub:subWindows) {
 				new ThreadRender(this,sub,g).start();
-				
 			}
 			/*
 			ThreadManager threadManager = new ThreadManager(5);
@@ -59,53 +63,87 @@ public class SubWindowManager {
 			heldWindow.y = my + mouseHeldY;
 		}
 	}
-	public void moveSubToTop(SubWindow sub) {
+	public static int getMouseX(SubWindow sub) { return MouseManager.mouseX - sub.x; }
+	public static int getMouseY(SubWindow sub) {
+		if(sub.titleBar)
+			return MouseManager.mouseY - sub.y - 15;
+		else
+			return MouseManager.mouseY - sub.y;
+	}
+	public void selectWindow(SubWindow sub) {
 		ArrayList<SubWindow> newList = new ArrayList<SubWindow>();
 		for(SubWindow s:subWindows)
 			if(s!=sub)
 				newList.add(s);
 		newList.add(sub);
 		subWindows = newList;
+		selectedWindow = sub;
+	}
+	//Task bar
+	public boolean showTaskBar = false;
+	byte location = 0, taskBarHeight = 30;
+	BufferedImage defaultWindowIcon;
+	public void renderTaskBar(Graphics g) {
+		showTaskBar = true;
+		switch(location) {
+			case 0:
+				g.setColor(Color.black);
+				g.fillRect(0, g.height-taskBarHeight, g.width, taskBarHeight);
+				byte num = 0;
+				ArrayList<SubWindow> win = new ArrayList<SubWindow>();
+				for(int z=0;z<SubWindow.sid;z++) for(SubWindow sub:subWindows) if(z==sub.id) win.add(sub);
+				for(SubWindow sub:win) {
+					BufferedImage icon = defaultWindowIcon;
+					if(sub.icon!=null) icon = sub.icon;
+					
+					if(selectedWindow==sub) {
+						g.setColor(accentColor);
+						g.fillRect(num*taskBarHeight, g.height-taskBarHeight, taskBarHeight, taskBarHeight);
+					}
+					g.drawImage(icon, num*taskBarHeight+taskBarHeight*.1, g.height-taskBarHeight+taskBarHeight*.1, taskBarHeight-taskBarHeight*.2, taskBarHeight-taskBarHeight*.2);
+					if(MouseManager.leftPressed)
+						if(mx>num*taskBarHeight & mx<(num+1)*taskBarHeight & my>g.height-taskBarHeight & my<g.height)
+							selectWindow(sub);
+					num+=1;
+				}
+				break;
+		}
 	}
 	public void defaultRender(Graphics g, int mx, int my) {
-		for(SubWindow sub:subWindows)
+		boolean clickedOnWindow = false;
+		for(SubWindow sub:subWindows) {
 			if(sub.visable) {
 				BufferedImage image = new BufferedImage(sub.width, sub.height, BufferedImage.TYPE_INT_ARGB);
 				Graphics i = new Graphics((Graphics2D)image.getGraphics());
 				sub.render(i);
 				if(sub.titleBar) {
-					if(MouseManager.leftPressed)
-						if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+15 ) {//Mouse on title bar
-							if(mx<sub.x+sub.width-20){//Check for X button
-								if(heldWindow==sub | heldWindow == null) {
-									if(!mouseHeld) {
-										mouseHeldX = (sub.x - mx);
-										mouseHeldY = (sub.y - my);
+					if(MouseManager.leftPressed) {
+						//if(my<taskBarHeight & showTaskBar) //Check if mouse isnt on task bar
+							if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+15 ) { //Mouse on title bar
+								if(mx<sub.x+sub.width-20)//Check for X button
+									if(heldWindow==sub | heldWindow == null) {
+										if(!mouseHeld) {
+											mouseHeldX = (sub.x - mx);
+											mouseHeldY = (sub.y - my);
+										}
+										sub.x = mx+mouseHeldX;
+										sub.y = my+mouseHeldY;
+										
+										mouseHeld = true;
+										heldWindow = sub;
+										selectWindow(sub);
 									}
-									sub.x = mx+mouseHeldX;
-									sub.y = my+mouseHeldY;
-									
-									mouseHeld = true;
-									heldWindow = sub;
-									moveSubToTop(sub);
-									selectedWindow = sub;
-								}
 							}
+							//Check if window click
+							if(!mouseHeld) if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+sub.height+15) selectWindow(sub);
+						} else { //!MouseManager.leftPressed
+							mouseHeld = false;
+							heldWindow = null;
 						}
 					if(heldWindow==null) {}else{
 						heldWindow.x = mx+mouseHeldX;
 						heldWindow.y = my+mouseHeldY;
 					}
-					if(!MouseManager.leftPressed) {
-						mouseHeld = false;
-						heldWindow = null;
-					}
-					//Check if windown click
-					if(MouseManager.leftPressed & !mouseHeld)
-						if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+sub.height+15) {
-							selectedWindow = sub;
-							moveSubToTop(sub);
-						}
 					//Actually draw stuff
 					if(sub.drawDefaultBackground) { g.setColor(new Color(45,45,45)); g.fillRect(sub.x, sub.y, sub.width, sub.height+15);}//DrawBackground
 					g.drawImage(image, sub.x, sub.y+15, sub.width, sub.height);
@@ -118,10 +156,18 @@ public class SubWindowManager {
 					}
 					g.drawRect(sub.x, sub.y, sub.width, sub.height+15);
 					g.fillRect(sub.x, sub.y, sub.width, 15);
-				} else {
+					g.drawOutlinedString(sub.name, sub.x+5, sub.y+g.fontSize-3);
+				} else {//!titleBar
+					if(sub.drawDefaultBackground) { g.setColor(new Color(45,45,45)); g.fillRect(sub.x, sub.y, sub.width, sub.height+15);}//DrawBackground
 					g.drawImage(image, sub.x, sub.y, sub.width, sub.height);
 				}
+				if(MouseManager.leftPressed | MouseManager.middlePressed | MouseManager.rightPressed)
+					if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+15) {
+						clickedOnWindow = true;
+					}
 			}
+		}
+		if((MouseManager.leftPressed | MouseManager.middlePressed | MouseManager.rightPressed) & !clickedOnWindow) selectedWindow = null;
 	}
 }
 
@@ -155,7 +201,7 @@ class ThreadRender extends Thread {
 								
 								manager.mouseHeld = true;
 								manager.heldWindow = sub;
-								manager.moveSubToTop(sub);
+								manager.selectWindow(sub);
 								manager.selectedWindow = sub;
 							}
 						}
@@ -172,7 +218,7 @@ class ThreadRender extends Thread {
 				if(MouseManager.leftPressed & !manager.mouseHeld)
 					if(manager.mx>sub.x & manager.mx<sub.x+sub.width & manager.my>sub.y & manager.my<sub.y+sub.height+15) {
 						manager.selectedWindow = sub;
-						manager.moveSubToTop(sub);
+						manager.selectWindow(sub);
 					}
 				//Actually draw stuff
 				if(sub.drawDefaultBackground) { g.setColor(new Color(45,45,45)); g.fillRect(sub.x, sub.y, sub.width, sub.height+15);}//DrawBackground

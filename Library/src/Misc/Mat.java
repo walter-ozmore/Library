@@ -20,23 +20,16 @@ public class Mat {
 		if(value <= lower) return lower;
 		return (int)Math.round(value);
 	}
-	public static void cal(String form) {
-		System.out.print(form+" = ");
-		ArrayList<String> list = new ArrayList<String>();
-		Scanner scan = new Scanner(form);
-		while(scan.hasNext()) list.add(scan.next());
-		scan.close();
-		//Addition
-		for(int z=0;z<list.size();z++) {
-			String str = list.get(z);
-			if( !isNum(str) ) {
-				if(str.contains("+")) {
-					
-				}
-			}
+	public static String cal(String form) {
+		String re = "";
+		//PEMDOS
+		for(int z=0;z<form.length();z++) {
+			
 		}
-		System.out.println();
+		return re;
 	}
+	
+	
 	public static Boolean isNum(String num) {
 		if(num.length()==0) return false;
 		for(int z=0;z<num.length();z++)

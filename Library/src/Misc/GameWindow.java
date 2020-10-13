@@ -16,23 +16,16 @@ import javax.swing.JFrame;
 
 public class GameWindow {
 	
-	public static int width=500, height=500, devMode = 0, maxFPS = 120;
-	public static double fps=0;
-	public static ArrayList<String> debugMessages = new ArrayList<String>();
+	public int width=500, height=500, devMode = 0, maxFPS = 120;
+	public double fps=0;
+	public ArrayList<String> debugMessages = new ArrayList<String>();
 	
 	private JFrame frame;
 	private Canvas canvas;
-	public static KeyManager keyManager;
-	public static MouseManager mouseManager;
+	public KeyManager keyManager;
+	public MouseManager mouseManager;
 	
-	//Starts the program
-	public static void main(String args[]) throws FileNotFoundException, IOException {
-		//Commands commands = new Commands(); commands.start();
-		main = new Main2();
-		main.start();
-	}
-	
-	public Main2(){
+	public GameWindow(){
 		fps = maxFPS;
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
@@ -68,18 +61,15 @@ public class GameWindow {
 		
 		width=canvas.getWidth();
 		height=canvas.getHeight();
-		
-		stateManager=new StateManager();
 	}
 	
 	private void tick(){
-		Main.width = width = canvas.getWidth();
-		Main.height = height = canvas.getHeight();
+		width = canvas.getWidth();
+		height = canvas.getHeight();
 		keyManager.tick();
 		
 		if(KeyManager.keyRelease(KeyEvent.VK_EQUALS) & devMode<1) devMode++;
 		if(KeyManager.keyRelease(KeyEvent.VK_MINUS) & devMode>0) devMode--;
-		stateManager.tick();
 	}
 	
 	private BufferStrategy bs;
@@ -99,9 +89,7 @@ public class GameWindow {
 		g.fillRect(0, 0, width, height);
 		//Draw Here!
 		
-		Graphics2D g2d=(Graphics2D) g;
-		
-		stateManager.render( new Misc.Graphics(g2d) );
+		Misc.Graphics gg = new Misc.Graphics((Graphics2D)g);
 		
 		//Drawing fps
 		if(devMode>0) {

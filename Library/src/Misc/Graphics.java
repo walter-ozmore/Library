@@ -8,15 +8,33 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Graphics {
-	public int fontSize = 15;
+	public int fontSize = 15, width = 0, height = 0;
 	public Graphics2D g;
 	final public boolean defaultScaleable = false;
 	public boolean scalable = defaultScaleable;
+	public BufferedImage[] layers;
+	public Graphics[] gl;
 	
+	public Graphics(java.awt.Graphics g) { this.g = (Graphics2D) g; }
 	public Graphics(Graphics2D g) { this.g = g; }
 	public void setColor(Color color) { g.setColor(color); }
+	public void setDim(int width, int height) { this.width = width; this.height = height; }
+	public void initLayers(int num) { initLayers(num, width, height); }
+	public void initLayers(int num, int width, int height) {
+		layers = new BufferedImage[num];
+		gl = new Graphics[num];
+		for(int z=0;z<layers.length;z++) {
+			layers[z] = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			gl[z] = new Graphics((Graphics2D)layers[z].getGraphics());
+		}
+	}
+	public void renderLayers() {
+		for(BufferedImage image:layers)
+			drawImage(image);
+	}
 	public void drawRect(double x, double y, double width, double height) {
 		g.drawRect((int)x, (int)y, (int)width, (int)height);
 		g.drawRect((int)x, (int)y, (int)width, (int)height);
@@ -50,6 +68,10 @@ public class Graphics {
 	public void drawImage(BufferedImage img,double x, double y, double width, double height) {
 		if(img!=null)
 			g.drawImage(img, (int)x, (int)y, (int)width, (int)height, null);
+	}
+	public void drawImage(BufferedImage img) {
+		if(img!=null)
+			g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 	}
 	public void drawRotatedImage(BufferedImage image,double x, double y, double width, double height, double angle) {
 		if(angle%2!=0) {
@@ -143,8 +165,8 @@ public class Graphics {
 
 		return new Point(ptX, ptY);
 	}
-	public void setFont(String font, int style, int size) {
-		fontSize = size;
-		g.setFont(new Font(font, style, size));
+	public void setFont(String font, int style, double size) {
+		fontSize = (int)size;
+		g.setFont(new Font(font, style, (int)size));
 	}
 }

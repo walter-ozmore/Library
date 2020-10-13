@@ -8,6 +8,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -115,5 +116,21 @@ public class FileUtil {
     } catch (IOException e) {
         e.printStackTrace();
     }
+	}
+	public static void copy(File original, File copy) {
+		if(!original.exists() | !copy.getParentFile().exists()) return;
+		if(copy.exists()) delete(copy);
+		try {
+			Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(original.isDirectory()) {
+			for(File file:original.listFiles()) {
+				File newOriginal = new File( original.getAbsolutePath() + "\\" + file.getName() );
+				File newCopy = new File( copy.getAbsolutePath() + "\\" + file.getName() );
+				copy(newOriginal,newCopy);
+			}
+		}
 	}
 }

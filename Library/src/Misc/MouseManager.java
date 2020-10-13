@@ -11,22 +11,25 @@ import java.util.List;
 
 import Events.KeyTypedEvent;
 import Events.MouseClickedEvent;
+import Events.MouseListenerEvent;
 import Events.MouseWheelMovedEvent;
 
 public class MouseManager implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-	public static boolean leftPressed, rightPressed;
-	public static boolean leftRelease, rightRelease;
+	public static boolean leftPressed, rightPressed, middlePressed;
 	public static int mouseX, mouseY, mouseScroll;
-	List<MouseWheelMovedEvent> listeners;
-	List<MouseClickedEvent> clickListeners;
+	static List<MouseWheelMovedEvent> listeners;
+	static List<MouseClickedEvent> clickListeners;
+	static List<MouseListenerEvent> mouseListeners;
 	
 	public MouseManager(){
-		this.listeners = new ArrayList<>();
-		this.clickListeners = new ArrayList<>();
+		MouseManager.listeners = new ArrayList<>();
+		MouseManager.clickListeners = new ArrayList<>();
+		MouseManager.mouseListeners = new ArrayList<>();
 	}
-	public void addMouseWheelEvent(MouseWheelMovedEvent listener) { listeners.add(listener); }
-	public void addMouseClickEvent(MouseClickedEvent listener) { clickListeners.add(listener); }
+	public static void addMouseWheelEvent(MouseWheelMovedEvent listener) { listeners.add(listener); }
+	public static void addMouseClickEvent(MouseClickedEvent listener) { clickListeners.add(listener); }
+	public static void addMouseListener(MouseListenerEvent listener) { mouseListeners.add(listener); }
 	
 	// Implemented methods
 	
@@ -34,14 +37,19 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 	public void mousePressed(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1)
 			leftPressed = true;
+		else if(e.getButton() == MouseEvent.BUTTON2)
+			middlePressed = true;
 		else if(e.getButton() == MouseEvent.BUTTON3)
 			rightPressed = true;
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.getButton() == MouseEvent.BUTTON1) 
 			leftPressed = false;
+		else if(e.getButton() == MouseEvent.BUTTON2)
+			middlePressed = false;
 		else if(e.getButton() == MouseEvent.BUTTON3) 
 			rightPressed = false;
 	}
@@ -67,8 +75,8 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 	public void mouseExited(MouseEvent e){}
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		for(MouseWheelMovedEvent listener:listeners)
-			listener.mouseWheelMoved(e);
+		for(MouseWheelMovedEvent listener:listeners) listener.mouseWheelMoved(e);
+		for(MouseListenerEvent listener:mouseListeners) listener.mouseWheelMoved(e);
 	}
 	
 	public static void print() {
