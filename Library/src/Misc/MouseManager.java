@@ -18,9 +18,9 @@ public class MouseManager implements MouseListener, MouseMotionListener, MouseWh
 
 	public static boolean leftPressed, rightPressed, middlePressed;
 	public static int mouseX, mouseY, mouseScroll;
-	static List<MouseWheelMovedEvent> listeners;
-	static List<MouseClickedEvent> clickListeners;
-	static List<MouseListenerEvent> mouseListeners;
+	static List<MouseWheelMovedEvent> listeners = new ArrayList<>();
+	static List<MouseClickedEvent> clickListeners = new ArrayList<>();
+	static List<MouseListenerEvent> mouseListeners = new ArrayList<>();
 	
 	public MouseManager(){
 		MouseManager.listeners = new ArrayList<>();

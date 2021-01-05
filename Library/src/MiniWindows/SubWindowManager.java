@@ -164,6 +164,7 @@ public class SubWindowManager {
 				if(MouseManager.leftPressed | MouseManager.middlePressed | MouseManager.rightPressed)
 					if(mx>sub.x & mx<sub.x+sub.width & my>sub.y & my<sub.y+15) {
 						clickedOnWindow = true;
+						selectWindow(sub);
 					}
 			}
 		}
