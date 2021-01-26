@@ -1,12 +1,24 @@
-package Misc;
+package Rendering;
 
 import java.awt.Color;
 
+import Misc.Graphics;
+
 public class Graphics3D {
 	public Graphics g;
+	int screenWidth = 0, screenHeight = 0;
+	Point3D camera = new Point3D(0,0,0);
 	
 	public Graphics3D (Graphics g) {
 		this.g = g;
+	}
+	public void updateScreen(int screenWidth, int screenHeight) {
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
+	}
+	public void drawPoint(Point3D point3D) {
+		int defaultSize = 100;
+		g.drawCenterCircle(point3D.x, point3D.z, defaultSize-point3D.x);
 	}
 	
 	public void drawCube(double angle) {

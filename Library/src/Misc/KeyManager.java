@@ -52,6 +52,19 @@ public class KeyManager implements KeyListener {
 	}
 	public static boolean getKey(int key) {return keys[key];}
 
+	public static String keyToString(int z) {
+		if(KeyEvent.VK_0 == z) return "0";
+		if(KeyEvent.VK_1 == z) return "1";
+		if(KeyEvent.VK_2 == z) return "2";
+		if(KeyEvent.VK_3 == z) return "3";
+		if(KeyEvent.VK_4 == z) return "4";
+		if(KeyEvent.VK_5 == z) return "5";
+		if(KeyEvent.VK_6 == z) return "6";
+		if(KeyEvent.VK_7 == z) return "7";
+		if(KeyEvent.VK_8 == z) return "8";
+		if(KeyEvent.VK_9 == z) return "9";
+		return "NAN";
+	}
 	public static String checkType() {
 		if(KeyManager.getKey(KeyEvent.VK_SHIFT)) {
 			if(KeyManager.keyRelease(KeyEvent.VK_A)) return "A";

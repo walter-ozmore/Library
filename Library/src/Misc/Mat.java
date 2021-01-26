@@ -15,20 +15,32 @@ public class Mat {
 			angle = Math.atan2( py,px);
 		return angle;
 	}
-	public static int inRange(double value, int lower, int upper) {
+	public static double inRange(double value, double lower, double upper) {
 		if(value >= upper) return upper;
 		if(value <= lower) return lower;
-		return (int)Math.round(value);
+		return value;
 	}
-	public static String cal(String form) {
-		String re = "";
-		//PEMDOS
-		for(int z=0;z<form.length();z++) {
-			
+	public static boolean isInRange(double value, double lower, double upper) {
+		if(value >= lower & value <= upper) return true;
+		return false;
+	}
+	public static double reduce(double value, double location, double delta) {
+		if(isInRange(value,location-delta, location+delta)) {
+			value = location;
+		} else {
+			if(value > location) value -= delta;
+			if(value < location) value += delta;
 		}
-		return re;
+		
+		return value;
 	}
-	
+	public static double max(double[] inputArray) {
+		double max = Double.MIN_VALUE;
+		for(double value:inputArray)
+			if(value > max)
+				max = value;
+		return max;
+	}
 	
 	public static Boolean isNum(String num) {
 		if(num.length()==0) return false;
