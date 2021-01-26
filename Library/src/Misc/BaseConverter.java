@@ -7,7 +7,7 @@ public class BaseConverter {
 			'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 			'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','-','_'};
 	
-	public static String toHex(int nums) throws InterruptedException {
+	public static String toHex(int nums) {
 		String str = "";
 		int currentNumber = nums;
 		int remander, result;
@@ -20,7 +20,7 @@ public class BaseConverter {
 		return str;
 	}
 	
-	public static int hexToDec(String hex) throws InterruptedException {
+	public static int hexToDec(String hex) {
 		int re = 0;
 		int place = 0;
 		for(int z=hex.length()-1;z>=0;z--) {
@@ -30,7 +30,7 @@ public class BaseConverter {
 		return re;
 	}
 	
-	public static String toBase64(int nums) throws InterruptedException {
+	public static String toBase64(int nums) {
 		String str = "";
 		int currentNumber = nums;
 		int remander, result;
@@ -43,7 +43,7 @@ public class BaseConverter {
 		return str;
 	}
 	
-	public static int base64ToDec(String hex) throws InterruptedException {
+	public static int base64ToDec(String hex) {
 		int re = 0;
 		int place = 0;
 		for(int z=hex.length()-1;z>=0;z--) {
