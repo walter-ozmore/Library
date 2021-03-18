@@ -89,6 +89,7 @@ public class GameWindow extends Thread {
 	public static void addGameWindowEvent(GameWindowEvent listener) { listeners.add(listener); }
 	
 	private void tick(){
+		long startTime = System.nanoTime();
 		width = canvas.getWidth();
 		height = canvas.getHeight();
 		keyManager.tick();
@@ -97,6 +98,7 @@ public class GameWindow extends Thread {
 		if(KeyManager.keyRelease(KeyEvent.VK_MINUS) & devMode>0) devMode--;
 		//stateManager.tick();
 		for(GameWindowEvent listener:listeners) listener.tick();
+		tickTime = System.nanoTime() - startTime;
 	}
 	
 	private BufferStrategy bs;
@@ -184,9 +186,7 @@ public class GameWindow extends Thread {
 				public void run() {
 					while(running) {
 						if(!unfocusedUpdating & !frame.hasFocus()) continue;
-						long startTime = System.nanoTime();
 						tick();
-						tickTime = System.nanoTime() - startTime;
 					}
 				}
 			});
