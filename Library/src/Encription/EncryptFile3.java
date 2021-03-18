@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Misc.MatrixManipulation;
 import Misc.TimeConverter;
 
 public class EncryptFile3 {

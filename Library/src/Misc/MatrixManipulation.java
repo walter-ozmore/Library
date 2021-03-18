@@ -1,12 +1,38 @@
-package Encription;
+package Misc;
+
+import java.util.Scanner;
 
 public class MatrixManipulation {
+	static Scanner userInput = null;
+	public static boolean printSteps = true;
+	
+	/* setUserInput(Scanner scanner);  && setUserInput();
+	 * This method is used to set the userInput scanner while also adding a shutDownHook to automatically 
+	 * close userInput on the programs exit. userInput is necessary because closing and opening a System.in
+	 * scanner multiply times causes problems, mostly failing to wait for input
+	 */
+	public static void setUserInput() {
+		userInput = new Scanner(System.in);
+		shutDownHook();
+	}
+	public static void setUserInput(Scanner scanner) {
+		userInput = scanner;
+		if(userInput != null) shutDownHook();
+	}
+	public static void shutDownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				if(userInput != null) userInput.close();
+			}
+		}, "Shutdown-thread"));
+	}
+	
+	//Shifting matrixes
 	public static int[][] shiftHorizontal(int [][] array, int row, int shiftAmount) {
 		if(shiftAmount>0) for(int z=0;z<shiftAmount;z++) array = shiftRowRight(array, row);
 		if(shiftAmount<0) for(int z=0;z<Math.abs(shiftAmount);z++) array = shiftRowRight(array, row);
 		return array;
 	}
-	
 	public static byte[][] shiftRowRight(byte[][] array, int y) {
 		byte[] newArray = new byte[array.length];
 		byte stored = array[y][array.length-1];
@@ -25,7 +51,6 @@ public class MatrixManipulation {
 		array[y] = newArray;
 		return array;
 	}
-	
 	public static int[][] shiftRowRight(int[][] array, int y) {
 		int[] newArray = new int[array.length];
 		int stored = array[y][array.length-1];
@@ -67,7 +92,6 @@ public class MatrixManipulation {
 			sum += array[column][x];
 		return sum;
 	}
-	
 	public static int[] productOfArray(int[] array, int mult) {
 		for(int z=0;z<array.length;z++)
 			array[z] = array[z] * mult;
@@ -79,11 +103,7 @@ public class MatrixManipulation {
 			arraySum[z] = arrayA[z] + arrayB[z];
 		return arraySum;
 	}
-	
-	
-	
 	//Array
-	
 	public static void productOfMatrixAndArray(int[][] matrix, int[] array) {
 		int[][] sumMatrix = new int[array.length][matrix.length];
 		
@@ -98,30 +118,9 @@ public class MatrixManipulation {
 		for(int x=0;x<sumMatrix.length;x++)
 			for(int y=0;y<sumMatrix[x].length;y++)
 				sumArray[y] += sumMatrix[x][y];
-		printArray(sumArray);
+		//printArray(sumArray);
 	}
-	
 	//Printing
-	public static <E> String printArray(E[] array) {
-		String re = "[";
-		for(int x=0;x<array.length;x++) {
-			re += array[x];
-			if(x<array.length-1)
-				re += ",";
-		}
-		re += "]\n";
-		return re;
-	}
-	public static String printArray(int[] array) {
-		String re = "[";
-		for(int x=0;x<array.length;x++) {
-			re += array[x];
-			if(x<array.length-1)
-				re += ",";
-		}
-		re += "]\n";
-		return re;
-	}
 	public static String printArray(double[] array) {
 		String re = "[";
 		for(int x=0;x<array.length;x++) {
@@ -135,38 +134,44 @@ public class MatrixManipulation {
 		re += "]\n";
 		return re;
 	}
-	public static String printMatrix(Integer[][] grid) {
-		String re = "";
-		for(int x=0;x<grid.length;x++) {
-			re += printArray(grid[x]);
-		}
-		return re+"\n";
+	public static void printMatrix(double[][] grid) {
+		for(String s:printStringMatrix(grid))
+			System.out.println(s);
 	}
-	public static String printMatrix(int[][] grid) {
-		String re = "";
-		for(int x=0;x<grid.length;x++) {
-			re += printArray(grid[x]);
+	public static String[] printStringMatrix(double[][] grid) {
+		String[] out = new String[grid.length];
+		for(int z=0;z<out.length;z++) out[z] = "[";
+		
+		for(int row = 0;row<grid[0].length;row++) {
+			//Space numbers out equally with number above & below them
+			int largest = 0;
+			for(int x=0;x<grid.length;x++) {
+				if( convertDecimalToFraction(grid[x][row]).length() > largest)
+					largest = convertDecimalToFraction(grid[x][row]).length();
+			}
+			for(int x=0;x<grid.length;x++) {
+				String s = ""+convertDecimalToFraction(grid[x][row]);
+				while(s.length()<largest) s = " "+s;
+				out[x] += s;
+				if(row<grid[0].length-1) out[x] += ", ";
+				if(row==grid[0].length-1) out[x] += "]";
+			}
 		}
-		return re+"\n";
+		
+		return out;
 	}
-	public static String printMatrix(double[][] grid) {
-		String re = "";
-		for(int x=0;x<grid.length;x++) {
-			re += printArray(grid[x]);
+	public static void printMatrixMod(double[][] matrix, String str) {
+		String[] out = printStringMatrix(matrix);
+		out[0] = str + out[0];
+		for(int x=1;x<out.length;x++) {
+			String store = out[x];
+			out[x] = "";
+			for(int y=0;y<str.length();y++) out[x] += " ";
+			out[x] += store;
 		}
-		return re+"\n";
+		for(String s:out) System.out.println(s);
 	}
-	//NO CLUE
-	public static double[] subArray(double[] a, double[] b) {
-		if(a.length != b.length) {
-			System.out.println("NOT THE SAME LENGTH");
-			System.exit(0);
-		}
-		double[] re = new double[a.length];
-		for(int z=0;z<a.length;z++)
-			re[z] = a[z]-b[z];
-		return re;
-	}
+	//Matrix
 	public static double[] addArray(double[] a, double[] b) {
 		if(a.length != b.length) {
 			System.out.println("NOT THE SAME LENGTH");
@@ -184,18 +189,17 @@ public class MatrixManipulation {
 		return re;
 	}
 	public static double[][] addMatrix(double[][] matrix, int row, int row2, double mult) {
-		System.out.println("R"+row+" = R"+row+" + "+mult+"*R"+row2);
+		String o = "R"+row+" = R"+row+" + "+convertDecimalToFraction(mult)+"*R"+row2+" ";
 		matrix[row-1] = addArray(matrix[row-1], multArray(matrix[row2-1], mult));
-		return matrix;
-	}
-	public static double[][] subMatrix(double[][] matrix, int row, int row2, double mult) {
-		System.out.println("R"+row+" = R"+row+" - "+mult+"*R"+row2);
-		matrix[row-1] = subArray(matrix[row-1], multArray(matrix[row2-1], mult));
+		if(printSteps) printMatrixMod(matrix, o);
 		return matrix;
 	}
 	public static double[][] multMatrix(double[][] matrix, int row, double mult) {
-		System.out.println("R"+row+" = "+mult+"*R"+row);
 		matrix[row-1] = multArray(matrix[row-1], mult);
+		
+		String o = "R"+row+" = "+convertDecimalToFraction(mult)+" * R"+row+" ";
+		if(printSteps) printMatrixMod(matrix, o);
+		
 		return matrix;
 	}
 	//Swapping
@@ -217,7 +221,7 @@ public class MatrixManipulation {
 		matrix[row2-1] = hold;
 		return matrix;
 	}
-	
+	//Converts decimals to more readable fraction, or an integer. Returns a String
 	static private String convertDecimalToFraction(double x){
 		if (x < 0)
 			return "-" + convertDecimalToFraction(-x);
@@ -231,14 +235,61 @@ public class MatrixManipulation {
 			aux = k1; k1 = a*k1+k2; k2 = aux;
 			b = 1/(b-a);
 		} while (Math.abs(x-h1/k1) > x*tolerance);
+		if((int)k1==1)
+			return (int)h1+"";
 		return (int)h1+"/"+(int)k1;
 	}
+	//Get user input
+	public static double[][] getUserInputMatrix() {
+		System.out.print("Enter the size of the matrix: ");
+		int sizeX = -1, sizeY = -1;
+		do {
+			String line = userInput.nextLine(); //Get users line
+			Scanner subScanner = new Scanner(line);
+			try {
+				sizeX = subScanner.nextInt();
+				sizeY = subScanner.nextInt();
+			}catch(Exception e) {
+				System.out.println("Please enter a valid size.");
+				sizeX = -1;
+				sizeY = -1;
+			}
+			subScanner.close();
+		}while(sizeX == -1 | sizeY == -1);
+		return getUserInputMatrix(sizeX, sizeY);
+	}
+	public static double[][] getUserInputMatrix(int sizeX, int sizeY) {
+		System.out.println("Input a "+sizeX+"x"+sizeY+" matrix:");
+		
+		double[][] matrix = new double[sizeX][sizeY];
+		
+		for(int y = 0;y<sizeY;y++) {
+			System.out.print("Row "+(y+1)+": ");
+			String line;
+			if(userInput.hasNextLine())
+				line = userInput.nextLine(); //Get users line
+			else {
+				y--;
+				System.out.println("SDF");
+				continue;
+			}
+			Scanner subScanner = new Scanner(line);
+			for(int x = 0;x<sizeX;x++) {
+				if(subScanner.hasNextDouble())
+					matrix[y][x] = subScanner.nextDouble();
+				else {
+					System.out.println("Missing number for row "+(y--+1));
+				}
+			}
+			subScanner.close();
+		}
+		return matrix;
+	}
 	//Determinant
-	public static int detGen(int[][] matrix) {
+	public static double detGen(double[][] matrix) {
 		return detGenRe(matrix, true);
 	}
-	public static int detGenRe(int[][] matrix, boolean pos) {
-		//System.out.println("PASS "+pos+"\n" + printMatrix(matrix).strip());
+	public static double detGenRe(double[][] matrix, boolean pos) {
 		//Check if square
 		if(matrix.length != matrix[0].length) {
 			throw new java.lang.RuntimeException("Matrix is not square");
@@ -250,8 +301,8 @@ public class MatrixManipulation {
 		for(int z=0;z<matrix.length;z++) {
 			//Stores the current location being edited on newMat
 			int loc = 0;
-			int slot = matrix[0][z];
-			int[][] newMat = new int[size-1][size-1];
+			double slot = matrix[0][z];
+			double[][] newMat = new double[size-1][size-1];
 			
 			for(int x=1;x<matrix.length;x++) {
 				for(int y=0;y<matrix[x].length;y++) {
