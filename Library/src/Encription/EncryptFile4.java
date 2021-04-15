@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-import Misc.TimeConverter;
+import Converter.TimeConverter;
 
 public class EncryptFile4 {
 	static int key;

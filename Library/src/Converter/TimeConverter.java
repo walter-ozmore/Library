@@ -1,4 +1,4 @@
-package Misc;
+package Converter;
 
 public class TimeConverter {
 	public static double nanoToMillisecond(double time) { return time / 1000000.0; }

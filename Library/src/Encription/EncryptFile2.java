@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import Converter.TimeConverter;
 import Misc.MatrixManipulation;
-import Misc.TimeConverter;
 
 public class EncryptFile2 {
 	static int key;
