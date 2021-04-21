@@ -35,7 +35,7 @@ public class GameWindow extends Thread {
 	public double fps=0;
 	public ArrayList<String> debugMessages = new ArrayList<String>();
 	
-	private JFrame frame;
+	public JFrame frame;
 	private Canvas canvas;
 	public KeyManager keyManager;
 	public MouseManager mouseManager;
