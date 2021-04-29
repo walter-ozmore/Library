@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Mat {
+	public static double round(double num,int place) {
+		num *= Math.pow(10, place);
+		num = (int)num;
+		num /= Math.pow(10, place);
+		return num;
+	}
 	public static double distance(double x1, double y1, double x2, double y2) {
 //		return Math.sqrt( Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2) );
 		return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));

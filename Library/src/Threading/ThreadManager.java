@@ -49,5 +49,10 @@ public class ThreadManager {
 			return true;
 		return false;
 	}
+	public void waitForThreads() {
+		while(!isAllThreadsDead()) {
+			
+		}
+	}
 }
 
