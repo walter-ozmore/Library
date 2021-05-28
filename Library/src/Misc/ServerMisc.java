@@ -61,7 +61,7 @@ public class ServerMisc {
 			out.write(buf, 0, len);
 		}
 	}
-	public static void getFile(InputStream in) throws IOException {
+	public static File getFile(InputStream in) throws IOException {
 		byte[] temp = new byte[8];
 		
 		//getName Length
@@ -80,8 +80,11 @@ public class ServerMisc {
 		in.read(temp);
 		long fileLength = BaseConverter.byteArrayToLong(temp);
 		
-		new File(name).getParentFile().mkdirs();
+		File parent = new File(name).getParentFile();
+		if(parent!=null)
+			parent.mkdirs();
 		copy(in, new FileOutputStream(name), fileLength );
+		return new File(name);
 	}
 	static void copy(InputStream in, OutputStream out, long size) throws IOException {
 		int bufSize = 8192;
@@ -96,6 +99,7 @@ public class ServerMisc {
 			}
 			if(size == 0) break;
 		}
+		out.close();
 	}
 	
 }

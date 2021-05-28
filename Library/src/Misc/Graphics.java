@@ -88,6 +88,44 @@ public class Graphics {
 		else
 			g.drawString(str, (int)x, (int)y);
 	}
+	public void drawColoredString(String str, double x, double y) {
+		String[] list = str.split("#");
+		int loc = 0;
+		for(int z=0;z<list.length;z++) {
+			if(z!=0)
+				if(list[z].charAt(0) == 'H') {
+					
+				} else {
+					switch(list[z].charAt(0)) {
+						case '0':setColor( new Color(  0,  0,  0) );break; //Black
+						case '1':setColor( new Color(  0,  0,170) );break; //Dark Blue
+						case '2':setColor( new Color(  0,170,  0) );break; //Dark Green
+						case '3':setColor( new Color(  0,170,170) );break; //Dark Aqua
+						case '4':setColor( new Color(170,  0,  0) );break; //Dark Red
+						case '5':setColor( new Color(170,  0,170) );break; //Dark Purple
+						case '6':setColor( new Color(255,170,  0) );break; //Gold
+						case '7':setColor( new Color(170,170,170) );break; //Gray
+						case '8':setColor( new Color( 85, 85, 85) );break; //Dark Gray
+						case '9':setColor( new Color( 85, 85,255) );break; //Blue
+						case 'a':setColor( new Color( 85,255, 85) );break; //Green
+						case 'b':setColor( new Color( 85,255,255) );break; //Aqua
+						case 'c':setColor( new Color(255, 80, 80) );break; //Red
+						case 'd':setColor( new Color(255, 85,255) );break; //Light Purple
+						case 'e':setColor( new Color(255,255, 85) );break; //Yellow
+						case 'f':setColor( new Color(255,255,255) );break; //White
+					}
+					list[z] = list[z].substring(1);
+//					player.sendMessage("#l "+ChatColor.BOLD+"Bold");
+//					player.sendMessage("#m "+ChatColor.STRIKETHROUGH+"Strikethrough");
+//					player.sendMessage("#n "+ChatColor.UNDERLINE+"Underline");
+//					player.sendMessage("#o "+ChatColor.ITALIC+"Italic");
+//					player.sendMessage("#r "+ChatColor.RESET+"Reset");
+				}
+			g.drawString(list[z], (int)x+loc, (int)(y));
+			loc += getStringLength(list[z]);
+		}
+		//System.out.println();
+	}
 	public void drawOutlinedString(String str, double x, double y) {
 		drawOutlinedString(str, x, y, Color.white, Color.black);
 	}
