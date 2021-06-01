@@ -121,7 +121,7 @@ public class GameWindow extends Thread {
 		g.fillRect(0, 0, width, height);
 		//Draw Here!
 		
-		Misc.Graphics gg = new Misc.Graphics((Graphics2D) g);
+		Rendering.Graphics gg = new Rendering.Graphics((Graphics2D) g);
 		gg.setDim(width, height);
 		
 		//Drawing fps

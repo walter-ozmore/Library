@@ -1,4 +1,4 @@
-package Misc;
+package Rendering;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -73,14 +74,41 @@ public class Graphics {
 		if(img!=null)
 			g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 	}
+	public void drawImage(BufferedImage img,int x,int y) {
+		if(img!=null)
+			g.drawImage(img, x, y, img.getWidth(), img.getHeight(), null);
+	}
 	public void drawRotatedImage(BufferedImage image,double x, double y, double width, double height, double angle) {
-		if(angle%2!=0) {
-			BufferedImage rotated = Assets.rotateImageByDegrees(image,angle);
+		if(image!=null && angle%360!=0) {
+			BufferedImage rotated = rotateImageByDegrees(image,angle);
 			double tempx = (double)rotated.getWidth()/image.getWidth();
 			double tempy = (double)rotated.getHeight()/image.getHeight();
 			drawImage(rotated,x-(width*(tempx-1))/2,y-(height*(tempy-1))/2,width*tempx,height*tempy);
 		}else
 			drawImage(image,x,y,width,height);
+	}
+	public static BufferedImage rotateImageByDegrees(BufferedImage img, double angle) {
+		double rads = Math.toRadians(angle);
+		double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));
+		int w = img.getWidth();
+		int h = img.getHeight();
+		int newWidth = (int) Math.floor(w * cos + h * sin);
+		int newHeight = (int) Math.floor(h * cos + w * sin);
+		
+		BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = rotated.createGraphics();
+		AffineTransform at = new AffineTransform();
+		at.translate((newWidth - w) / 2, (newHeight - h) / 2);
+		
+		int x = w / 2;
+		int y = h / 2;
+		
+		at.rotate(rads, x, y);
+		g2d.setTransform(at);
+		g2d.drawImage(img, 0, 0, null);
+		g2d.dispose();
+		
+		return rotated;
 	}
 	public void drawString(String str, double x, double y) { 
 		if(str==null)
@@ -141,7 +169,7 @@ public class Graphics {
 	}
 	public void drawLine(double x1, double y1, double x2, double y2) { g.drawLine((int)x1, (int)y1, (int)x2, (int)y2); }
 	public void drawLine(Point point,Point point2) { g.drawLine((int)point.getX(), (int)point.getY(), (int)point2.getX(), (int)point2.getY()); }
-	public void drawLine(DataPoint point,DataPoint point2) { g.drawLine((int)point.x, (int)point.y, (int)point2.x, (int)point2.y); }
+	//public void drawLine(DataPoint point,DataPoint point2) { g.drawLine((int)point.x, (int)point.y, (int)point2.x, (int)point2.y); }
 	public void drawRLine(double x1, double y1, double x2, double y2) {
 		x2 = x2+x1;
 		y2 = y2+y1;

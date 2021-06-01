@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import Misc.DataPoint;
-import Misc.Graphics;
+import Rendering.Graphics;
 
 public class ScatterPlotSubWindow extends SubWindow {
 	boolean drawLines = true;

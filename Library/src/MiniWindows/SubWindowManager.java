@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import Misc.Graphics;
 import Misc.MouseManager;
+import Rendering.Graphics;
 import Threading.ThreadManager;
 
 public class SubWindowManager {

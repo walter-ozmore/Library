@@ -2,8 +2,6 @@ package Rendering;
 
 import java.awt.Color;
 
-import Misc.Graphics;
-
 public class Graphics3D {
 	public Graphics g;
 	int screenWidth = 0, screenHeight = 0;

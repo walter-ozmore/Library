@@ -1,6 +1,6 @@
 package Events;
 
-import Misc.Graphics;
+import Rendering.Graphics;
 
 public interface GameWindowEvent {
 	void tick();

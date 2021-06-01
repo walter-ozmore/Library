@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 import Events.CommandEvent;
 import Events.KeyTypedEvent;
-import Misc.Graphics;
 import Misc.KeyManager;
+import Rendering.Graphics;
 
 public class CommandLineSubWindow extends SubWindow implements KeyTypedEvent{
 	String type = "";

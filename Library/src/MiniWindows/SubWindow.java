@@ -2,7 +2,7 @@ package MiniWindows;
 
 import java.awt.image.BufferedImage;
 
-import Misc.Graphics;
+import Rendering.Graphics;
 
 public abstract class SubWindow {
 	public boolean 
