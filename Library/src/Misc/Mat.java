@@ -27,7 +27,7 @@ public class Mat {
 		return value;
 	}
 	public static boolean isInRange(double value, double lower, double upper) {
-		if(value >= lower & value <= upper) return true;
+		if(value >= lower && value <= upper) return true;
 		return false;
 	}
 	public static double reduce(double value, double location, double delta) {
@@ -47,7 +47,16 @@ public class Mat {
 				max = value;
 		return max;
 	}
-	
+	public static long getAdv(ArrayList<Long> list) {
+		try {
+			long sum = 0;
+			for(int z=0;z<list.size();z++)
+				sum += list.get(z);
+			return sum/list.size();
+		}catch(Exception e) {
+			return -1;
+		}
+	}
 	public static Boolean isNum(String num) {
 		if(num.length()==0) return false;
 		for(int z=0;z<num.length();z++)

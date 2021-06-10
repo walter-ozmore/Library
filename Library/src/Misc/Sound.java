@@ -9,11 +9,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
 public class Sound extends Thread {
-	boolean loop = false;
+	public boolean loop = false, playing = true;
 	Clip clip;
 	float vol = 1f;
 	long clipTime = 0;
-	long sleep = 0;
+	public long sleep = 0;
 	String location;
 	public String group = "default";
 	
@@ -30,6 +30,7 @@ public class Sound extends Thread {
 		this.sleep = sleep;
 	}
 	public void run() {
+		playing = true;
 		try {
 			if(sleep>0)
 				Thread.sleep(sleep);
@@ -39,10 +40,12 @@ public class Sound extends Thread {
 			if(loop) clip.loop(Clip.LOOP_CONTINUOUSLY);
 			setVolume(vol*SoundManager.getVolume());
 			clip.start();
-			while(clip.isRunning());
+			while(clip.isActive()) {};
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		playing = false;
+		System.out.println("DONE");
 	}
 	
 	public void pause() {
