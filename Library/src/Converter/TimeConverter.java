@@ -6,6 +6,7 @@ import Misc.Mat;
 
 public class TimeConverter {
 	public static int round = 2;
+	public static double auto = .1;
 	public static double nanoToMicrosecond(long time) { return Mat.round( time / 1000.0, round ); }
 	public static double nanoToMillisecond(double time) { return Mat.round( time / 1000000.0, round ); }
 	public static double nanoToMillisecond(long time) { return Mat.round( time / 1000000.0, round ); }
@@ -14,13 +15,14 @@ public class TimeConverter {
 	public static double nanoToHour(long time) { return Mat.round( nanoToMinute(time)/60.0, round ); }
 	public static double nanoToDay(long time) { return Mat.round( nanoToHour(time)/24.0, round ); }
 	
+	
 	public static String nanoToAutomatic(long time) {
-		if( nanoToMicrosecond(time) > 1 ) {
-			if( nanoToMillisecond(time) > 1 ) {
-				if( nanoToSecond(time) > 1 ) {
-					if( nanoToMinute(time) > 1 ) {
-						if( nanoToHour(time) > 1 ) {
-							if( nanoToDay(time) > 1 ) {
+		if( nanoToMicrosecond(time) > auto ) {
+			if( nanoToMillisecond(time) > auto ) {
+				if( nanoToSecond(time) > auto ) {
+					if( nanoToMinute(time) > auto ) {
+						if( nanoToHour(time) > auto ) {
+							if( nanoToDay(time) > auto ) {
 								if(round == 0) return (int)nanoToDay(time)+" Days";
 								return nanoToDay(time)+" Days";
 							}

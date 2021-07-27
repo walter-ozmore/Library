@@ -122,6 +122,7 @@ public class FileUtil {
 		if(copy.exists()) delete(copy);
 		try {
 			Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			System.out.println("COPY "+original.getAbsolutePath()+" -> "+copy.getAbsolutePath());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
