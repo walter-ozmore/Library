@@ -175,6 +175,9 @@ public class Graphics {
 		y2 = y2+y1;
 		g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
 	}
+	public void drawAngledLine(double x, double y, double angle, double length) {
+		drawLine(x,y,x+length*Math.cos(Math.toRadians(angle)),y+length*Math.sin(Math.toRadians(angle)));
+	}
 	public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
 		g.drawArc((int)x, (int)y, (int)width, (int)height, (int)startAngle, (int)arcAngle);
 	}
