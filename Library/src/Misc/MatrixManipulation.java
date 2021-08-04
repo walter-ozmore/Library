@@ -202,6 +202,22 @@ public class MatrixManipulation {
 		
 		return matrix;
 	}
+	public static double[][] add(double[][] a, double[][] b){
+		double[][] z = new double[Math.max(a.length, b.length)][Math.max(a[0].length, b[0].length)];
+		for(int x=0;x<Math.max(a[0].length, b[0].length);x++)
+			for(int y=0;y<Math.max(a.length, b.length);y++) {
+				z[x][y] = a[x][y] + b[x][y];
+			}
+		return z;
+	}
+	public static double[][] transpose(double[][] t){
+		double[][] z = new double[t[0].length][t.length];
+		for(int x=0;x<t[0].length;x++)
+			for(int y=0;y<t.length;y++)
+				z[x][y] = t[y][x];
+		return z;
+	}
+	
 	//Swapping
 	public static <E> E[][] swapMatrix(E[][] matrix, int row, int row2) {
 		E[] hold = matrix[row-1];
