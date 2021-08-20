@@ -120,6 +120,12 @@ public class MatrixManipulation {
 				sumArray[y] += sumMatrix[x][y];
 		//printArray(sumArray);
 	}
+	public static double sumOfArray(double[] array) {
+		double sum = 0;
+		for(double d:array)
+			sum += d;
+		return sum;
+	}
 	//Printing
 	public static String printArray(double[] array) {
 		String re = "[";

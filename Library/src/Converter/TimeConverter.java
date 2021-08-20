@@ -5,8 +5,8 @@ import java.util.Date;
 import Misc.Mat;
 
 public class TimeConverter {
-	public static int round = 2;
-	public static double auto = .5;
+	public static int round = -1;
+	public static double auto = 1;
 	public static double nanoToMicrosecond(long time) { return Mat.round( time / 1000.0, round ); }
 	public static double nanoToMillisecond(double time) { return Mat.round( time / 1000000.0, round ); }
 	public static double nanoToMillisecond(long time) { return Mat.round( time / 1000000.0, round ); }
