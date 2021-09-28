@@ -4,8 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadManager {
+	class ThreadWraper {
+		long id = 0;
+		Thread thread;
+		
+		public ThreadWraper(Thread thread) {
+			this.thread = thread;
+			id = tid++;
+		}
+		public void syncOutput() {}
+		public boolean isAlive() { return thread.isAlive(); }
+		public void start() { thread.start(); }
+	}
+	
 	int maxThreads;
+	static long tid = 0;
 	ArrayList<ThreadWraper> threads;
+	ArrayList<ThreadWraper> threadsInQueue;
 	
 	public ThreadManager(int maxThreads) {
 		this.maxThreads = maxThreads;
@@ -13,46 +28,26 @@ public class ThreadManager {
 	}
 	void init() {
 		threads = new ArrayList<ThreadWraper>();
+		threadsInQueue = new ArrayList<ThreadWraper>();
 	}
-	public boolean addThread(Thread thread) {
+	public void addThread(Thread thread) {
 		removeDeadThreads();
-		if(threads.size()<maxThreads) {
-			thread.start();
-			threads.add(new DefaultThreadWraper(thread));
-			return true;
-		}
-		return false;
+		threadsInQueue.add(new ThreadWraper(thread));
 	}
-	public boolean addThread(ThreadWraper thread) {
-		removeDeadThreads();
-		if(threads.size()<maxThreads) {
-			thread.start();
-			threads.add(thread);
-			return true;
+	public void run() {
+		while(threads.size() != 0 || threadsInQueue.size() != 0) {
+			removeDeadThreads();
+			if(threads.size() < threadsInQueue.size() && threads.size() < maxThreads) {
+				ThreadWraper tr = threadsInQueue.remove(0);
+				tr.start();
+				threads.add(tr);
+			}
 		}
-		return false;
 	}
 	void removeDeadThreads() {
 		for(int x=0; x<threads.size(); x++)
 			if(!threads.get(x).isAlive())
 				threads.remove(x--);
-	}
-	public boolean isAllThreadsDead() {
-		removeDeadThreads();
-		if(threads.size()<=0)
-			return true;
-		return false;
-	}
-	public boolean isOpenThread() {
-		removeDeadThreads();
-		if(threads.size()<maxThreads)
-			return true;
-		return false;
-	}
-	public void waitForThreads() {
-		while(!isAllThreadsDead()) {
-			
-		}
 	}
 }
 
