@@ -14,7 +14,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileUtil {
-	
+	/* delete(file)
+	 * Will delete a file or folder given to the function as well as all sub dir
+	 */
 	public static void delete(File file){
 		if(file.isDirectory()) {
 			for (File subFile : file.listFiles())
@@ -59,28 +61,19 @@ public class FileUtil {
 		}
 		return null;
 	}
-	public static long getDirFileSize(File file) {
+	/* getLength(file)
+	 * This function will return the length of a file or folder by use of recursion in bytes
+	 */
+	public static long getLength(File file) {
 		if(file.isDirectory()) {
 			long re = 0;
 			File[] listFiles = file.listFiles();
 			if(listFiles!=null	)
 				for (File f:listFiles)
-					re += getDirFileSize(f);
+					re += getLength(f);
 			return re;
 		}else
 			return file.length();
-	}
-	/* Type
-	 * 0 - Bytes
-	 * 1 - Kilobyte
-	 * 2 - Megabyte
-	 * 3 - Gigabyte
-	 * 4 - Terabyte
-	 * 5 - Petabyte
-	 * 6 - Exabyte
-	 */
-	public static double getFileSizeIn(long size, int type) {
-		return size/(Math.pow(1024,type));
 	}
 	public static void unzip(File zipFilePath, String destDir) {
 		File dir = new File(destDir);
@@ -117,6 +110,10 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
+	/* copy(originalFile, copyFile)
+	 * copies all files from original file folder to the dir of copy file
+	 * if a copy of file exists already it will delete and replace it
+	 */
 	public static void copy(File original, File copy) {
 		if(!original.exists() | !copy.getParentFile().exists()) return;
 		if(copy.exists()) delete(copy);
@@ -127,11 +124,13 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 		if(original.isDirectory()) {
-			for(File file:original.listFiles()) {
-				File newOriginal = new File( original.getAbsolutePath() + "\\" + file.getName() );
-				File newCopy = new File( copy.getAbsolutePath() + "\\" + file.getName() );
-				copy(newOriginal,newCopy);
-			}
+			File[] list = original.listFiles();
+			if(list != null)
+				for(File file:list) {
+					File newOriginal = new File( original.getAbsolutePath() + "\\" + file.getName() );
+					File newCopy = new File( copy.getAbsolutePath() + "\\" + file.getName() );
+					copy(newOriginal,newCopy);
+				}
 		}
 	}
 }

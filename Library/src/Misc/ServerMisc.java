@@ -35,6 +35,9 @@ public class ServerMisc {
 			out.write( aName );
 	}
 	//Files
+	/* 
+	 * @parm String str location of file on client
+	 */
 	public static void sendFile(OutputStream out, File file, String str) throws IOException {
 		//*
 		InputStream in = new FileInputStream( file );
