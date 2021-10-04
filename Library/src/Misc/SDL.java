@@ -45,6 +45,11 @@ public class SDL {
 			str = str.substring(0, str.length() - 1);
 		return str;
 	}
+	
+	public static void errorAndExit(String str) {
+		System.err.println();
+		System.exit(0);
+	}
 
 	// Can't templetize it sadly
 	public static String[] append(String str, String[] list) {

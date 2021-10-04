@@ -19,13 +19,13 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Events.GameWindowEvent;
 import Events.KeyTypedEvent;
+import Events.SimpleWindowEvent;
 import Misc.Assets;
 import Misc.KeyManager;
 import Misc.MouseManager;
 
-public class GameWindow extends Thread {
+public class SimpleWindow extends Thread {
 	
 	boolean running = true;
 	public int width=500, height=500, devMode = 0, maxFPS = 120;
@@ -38,9 +38,9 @@ public class GameWindow extends Thread {
 	public MouseManager mouseManager;
 	public String name = "MISSING WINDOW NAME";
 	
-	List<GameWindowEvent> listeners;
+	List<SimpleWindowEvent> listeners;
 	
-	public GameWindow(){
+	public SimpleWindow(){
 		fps = maxFPS;
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
@@ -83,25 +83,12 @@ public class GameWindow extends Thread {
 		height=canvas.getHeight();
 	}
 	
-	public void addGameWindowEvent(GameWindowEvent listener) { listeners.add(listener); }
-	
-	void tick(){
-		long startTime = System.nanoTime();
-		width = canvas.getWidth();
-		height = canvas.getHeight();
-		keyManager.tick();
-		
-		if(KeyManager.keyRelease(KeyEvent.VK_EQUALS) & devMode<1) devMode++;
-		if(KeyManager.keyRelease(KeyEvent.VK_MINUS) & devMode>0) devMode--;
-		//stateManager.tick();
-		for(GameWindowEvent listener:listeners) listener.tick();
-		tickTime = System.nanoTime() - startTime;
-	}
+	public void addSimpleWindowEvent(SimpleWindowEvent listener) { listeners.add(listener); }
 	
 	private BufferStrategy bs;
 	private Graphics g;
 	
-	void render(){
+	void tar(){
 		long startTime = System.nanoTime();
 		bs = canvas.getBufferStrategy();
 		if(bs == null){
@@ -119,27 +106,32 @@ public class GameWindow extends Thread {
 		Rendering.Graphics gg = new Rendering.Graphics((Graphics2D) g);
 		gg.setDim(width, height);
 		
-		//Drawing fps
+		width = canvas.getWidth();
+		height = canvas.getHeight();
+		keyManager.tick();
 		
-		for(GameWindowEvent listener:listeners) listener.render(gg);
+		if(KeyManager.keyRelease(KeyEvent.VK_EQUALS) & devMode<1) devMode++;
+		if(KeyManager.keyRelease(KeyEvent.VK_MINUS) & devMode>0) devMode--;
+		for(SimpleWindowEvent listener:listeners) listener.tar(gg);
+		tickTime = System.nanoTime() - startTime;
+		
+		//Drawing debug
 		
 		if(devMode>0) {
 			g.setColor(Color.green);
 			g.setFont( new Font("Serif",Font.PLAIN,15) );
 			debugMessages.add("FPS "+fps);
-			debugMessages.add("Tick Time: "+tickTime/1_000_000.0+"ms");
-			debugMessages.add("Render Time: "+renderTime/1_000_000.0+"ms");
+			debugMessages.add("TAR Time: "+tarTime/1_000_000.0+"ms");
 			for(int x=0;x<debugMessages.size();x++)
 				g.drawString(debugMessages.get(x),0, (x+1)*15);
-//			g.drawString("Dev Mode "+devMode,0, height-20);
 		}
 		//End Drawing!
 		bs.show();
 		g.dispose();
 		debugMessages = new ArrayList<String>();
-		renderTime = System.nanoTime() - startTime;
+		tarTime = System.nanoTime() - startTime;
 	}
-	static long tickTime = 0, renderTime = 0;
+	static long tickTime = 0, tarTime = 0;
 	public void run(){
 		init();
 		int ticks = 0;
@@ -151,8 +143,7 @@ public class GameWindow extends Thread {
 			timer += now - lastTime;
 			lastTime = now;
 			if(delta >= 1){
-				tick();
-				render();
+				tar();
 				ticks++;
 				delta--;
 			}
