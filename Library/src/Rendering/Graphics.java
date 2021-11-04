@@ -43,6 +43,11 @@ public class Graphics {
 	public void fillRect(double x, double y, double width, double height) {
 		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}
+	public void outlineRect(double x, double y, double width, double height) {
+		g.fillRect((int)x, (int)y, (int)width, (int)height);
+		setColor(new Color(0,0,0));
+		g.drawRect((int)x, (int)y, (int)width, (int)height);
+	}
 	public void drawOval(double x, double y, double width, double height) {
 		g.drawOval((int)x, (int)y, (int)width, (int)height);
 	}
@@ -180,14 +185,6 @@ public class Graphics {
 	}
 	public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
 		g.drawArc((int)x, (int)y, (int)width, (int)height, (int)startAngle, (int)arcAngle);
-	}
-	public void setFont(Font font) { g.setFont(font); }
-	public void setFontSize(int size) {
-		//Not working
-		Font currentFont = g.getFont();
-		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
-		g.setFont(newFont);
-		
 	}
 	public int getStringLength(String s) { return g.getFontMetrics().stringWidth(s); }
 	public int getFontHeight() { return g.getFontMetrics().getHeight(); }

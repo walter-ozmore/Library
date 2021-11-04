@@ -13,7 +13,6 @@ public class Rob extends Robot {
 	public Rob() throws AWTException {
 		super();
 	}
-
 	public void paste() {
 		keyPress(KeyEvent.VK_CONTROL);
 		keyPress(KeyEvent.VK_V);

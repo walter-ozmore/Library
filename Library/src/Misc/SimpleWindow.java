@@ -119,11 +119,12 @@ public class SimpleWindow extends Thread {
 		
 		if(devMode>0) {
 			g.setColor(Color.green);
-			g.setFont( new Font("Serif",Font.PLAIN,15) );
+			gg.setFont( "Serif",Font.PLAIN,10 );
+			gg.fontSize = 10;
 			debugMessages.add("FPS "+fps);
 			debugMessages.add("TAR Time: "+tarTime/1_000_000.0+"ms");
 			for(int x=0;x<debugMessages.size();x++)
-				g.drawString(debugMessages.get(x),0, (x+1)*15);
+				g.drawString(debugMessages.get(x),0, (x+1)*gg.fontSize);
 		}
 		//End Drawing!
 		bs.show();
