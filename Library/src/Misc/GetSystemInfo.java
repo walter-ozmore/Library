@@ -5,12 +5,6 @@ import java.io.InputStreamReader;
 
 public class GetSystemInfo {
 	
-	public static void main(String args[]) {
-		for(String s:runCommand("pip list")) {
-			System.out.println(s);
-		}
-	}
-	
 	public static void installPipPackage(String str) {
 		if(!checkPipPackage(str)) {
 			runCommand("pip install "+str);

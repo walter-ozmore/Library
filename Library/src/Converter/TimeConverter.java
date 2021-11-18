@@ -38,8 +38,8 @@ public class TimeConverter {
 				if(round == 0) return (int)nanoToMillisecond(time)+" Milliseconds";
 				return nanoToMillisecond(time)+" Milliseconds";
 			}
-			if(round == 0) return (int)nanoToMillisecond(time)+" Microseconds";
-			return nanoToMillisecond(time)+" Microseconds";
+			if(round == 0) return (int)nanoToMicrosecond(time)+" Microseconds";
+			return nanoToMicrosecond(time)+" Microseconds";
 		}
 		if(round == 0) return (int)time+" Nanoseconds";
 		return time+" Nanoseconds";
