@@ -115,11 +115,15 @@ public class FileUtil {
 	 * if a copy of file exists already it will delete and replace it
 	 */
 	public static void copy(File original, File copy) {
-		if(!original.exists() | !copy.getParentFile().exists()) return;
+		if(!original.exists()) {
+			System.err.println("Original file does not exist");
+			return;
+		}
+		if(!copy.getParentFile().exists()) copy.getParentFile().mkdirs();
 		if(copy.exists()) delete(copy);
 		try {
 			Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("COPY "+original.getAbsolutePath()+" -> "+copy.getAbsolutePath());
+//			System.out.println("COPY "+original.getAbsolutePath()+" -> "+copy.getAbsolutePath());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
