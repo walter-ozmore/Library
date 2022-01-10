@@ -20,6 +20,15 @@ public class SDL {
 		}
 		print("]");
 	}
+	public static void print(int[] var) {
+		print("[");
+		for (int z=0;z<var.length;z++) {
+			print(var[z]);
+			if(z < var.length-1)
+				print(", ");
+		}
+		print("]");
+	}
 
 	public static void println() {
 		System.out.println();
