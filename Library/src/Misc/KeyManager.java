@@ -48,7 +48,6 @@ public class KeyManager implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		for(KeyTypedEvent listener:listeners)
 			listener.keyTyped(e);
-		//Main.keyTyped(e);
 	}
 	public static boolean getKey(int key) {return keys[key];}
 
@@ -134,6 +133,8 @@ public class KeyManager implements KeyListener {
 		if(KeyManager.keyRelease(KeyEvent.VK_SPACE)) return " ";
 		if(KeyManager.keyRelease(KeyEvent.VK_ENTER)) return "ENTER";
 		if(KeyManager.keyRelease(KeyEvent.VK_BACK_SPACE)) return "BACKSPACE";
+		if(KeyManager.keyRelease(KeyEvent.VK_UP)) return "UP";
+		if(KeyManager.keyRelease(KeyEvent.VK_DOWN)) return "DOWN";
 		return "";
 	}
 }

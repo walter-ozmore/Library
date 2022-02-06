@@ -14,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class FileUtil {
+	public static boolean printDebug = true;
 	/* delete(file)
 	 * Will delete a file or folder given to the function as well as all sub dir
 	 */
@@ -75,6 +76,19 @@ public class FileUtil {
 		}else
 			return file.length();
 	}
+	
+	public static long countFiles(File file) {
+		if(file.isDirectory()) {
+			long re = 0;
+			File[] listFiles = file.listFiles();
+			if(listFiles!=null	)
+				for (File f:listFiles)
+					re += countFiles(f);
+			return re;
+		}else
+			return 1;
+	}
+	
 	public static void unzip(File zipFilePath, String destDir) {
 		File dir = new File(destDir);
 		// create output directory if it doesn't exist
@@ -121,12 +135,7 @@ public class FileUtil {
 		}
 		if(!copy.getParentFile().exists()) copy.getParentFile().mkdirs();
 		if(copy.exists()) delete(copy);
-		try {
-			Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-//			System.out.println("COPY "+original.getAbsolutePath()+" -> "+copy.getAbsolutePath());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		if(original.isDirectory()) {
 			File[] list = original.listFiles();
 			if(list != null)
@@ -135,6 +144,14 @@ public class FileUtil {
 					File newCopy = new File( copy.getAbsolutePath() + "\\" + file.getName() );
 					copy(newOriginal,newCopy);
 				}
+		} else if(original.isFile()) {
+			try {
+				Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (Exception e) {
+				System.out.println( original.getAbsolutePath() );
+				System.out.println( copy.getAbsolutePath() );
+				e.printStackTrace();
+			}
 		}
 	}
 }

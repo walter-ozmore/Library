@@ -235,4 +235,5 @@ public class Graphics {
 		fontSize = (int)size;
 		g.setFont(new Font(font, style, (int)size));
 	}
+	public void setFont(Font font) { g.setFont( font ); }
 }

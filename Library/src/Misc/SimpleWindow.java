@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 
 import Events.KeyTypedEvent;
@@ -33,6 +34,7 @@ public class SimpleWindow extends Thread {
 	public ArrayList<String> debugMessages = new ArrayList<String>();
 	
 	public JFrame frame;
+	public JMenuBar menuBar;
 	private Canvas canvas;
 	public KeyManager keyManager;
 	public MouseManager mouseManager;
@@ -64,6 +66,7 @@ public class SimpleWindow extends Thread {
 		frame.addMouseListener(mouseManager);
 		frame.addMouseMotionListener(mouseManager);
 		frame.addMouseWheelListener(mouseManager);
+		frame.setJMenuBar(menuBar);
 		
 		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(width, height));
@@ -81,6 +84,10 @@ public class SimpleWindow extends Thread {
 		
 		width=canvas.getWidth();
 		height=canvas.getHeight();
+	}
+	
+	public void setJMenuBar(JMenuBar menuBar) {
+		this.menuBar = menuBar;
 	}
 	
 	public void addSimpleWindowEvent(SimpleWindowEvent listener) { listeners.add(listener); }
