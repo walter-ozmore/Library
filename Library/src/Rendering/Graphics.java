@@ -9,7 +9,8 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+
+import Misc.Mat;
 
 public class Graphics {
 	public int fontSize = 15, width = 0, height = 0;
@@ -21,7 +22,14 @@ public class Graphics {
 	
 	public Graphics(java.awt.Graphics g) { this.g = (Graphics2D) g; }
 	public Graphics(Graphics2D g) { this.g = g; }
+	
+	// Colors
 	public void setColor(Color color) { g.setColor(color); }
+	public void setColor(int r, int g, int b) {
+		Color color = new Color( (int)Mat.inRange(r, 0, 255), (int)Mat.inRange(g, 0, 255), (int)Mat.inRange(b, 0, 255) );
+		setColor(color);
+	}
+	
 	public void setDim(int width, int height) { this.width = width; this.height = height; }
 	public void initLayers(int num) { initLayers(num, width, height); }
 	public void initLayers(int num, int width, int height) {
@@ -171,6 +179,7 @@ public class Graphics {
 		drawString(str, x, y-borderAmount);
 		g.setColor(strColor);
 		drawString(str, x, y);
+		
 	}
 	public void drawLine(double x1, double y1, double x2, double y2) { g.drawLine((int)x1, (int)y1, (int)x2, (int)y2); }
 	public void drawLine(Point point,Point point2) { g.drawLine((int)point.getX(), (int)point.getY(), (int)point2.getX(), (int)point2.getY()); }
@@ -186,7 +195,10 @@ public class Graphics {
 	public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
 		g.drawArc((int)x, (int)y, (int)width, (int)height, (int)startAngle, (int)arcAngle);
 	}
-	public int getStringLength(String s) { return g.getFontMetrics().stringWidth(s); }
+	public int getStringLength(String s) {
+		if(s == null || s.length() == 0) return 0;
+		return g.getFontMetrics().stringWidth(s);
+	}
 	public int getFontHeight() { return g.getFontMetrics().getHeight(); }
 	public FontMetrics getFontMetrics() { return g.getFontMetrics(); }
 	public void drawShape(Shape shape) { g.draw(shape); }
