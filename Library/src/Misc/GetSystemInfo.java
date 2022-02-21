@@ -2,8 +2,19 @@ package Misc;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class GetSystemInfo {
+	
+	public static String getSystemName() {
+		try {
+			return InetAddress.getLocalHost()+"";
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static void installPipPackage(String str) {
 		if(!checkPipPackage(str)) {

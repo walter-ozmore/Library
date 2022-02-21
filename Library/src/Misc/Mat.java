@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Mat {
 	public static double round(double num,int place) {
+		if(place < 0) return num;
 		num *= Math.pow(10, place);
 		num = (int)num;
 		num /= Math.pow(10, place);

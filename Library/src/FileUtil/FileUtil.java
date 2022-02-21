@@ -2,6 +2,7 @@ package FileUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -10,6 +11,9 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -20,11 +24,12 @@ public class FileUtil {
 	 */
 	public static void delete(File file){
 		if(file.isDirectory()) {
-			for (File subFile : file.listFiles())
-				if(subFile.isDirectory())
-					delete(subFile);
-				else 
-					subFile.delete();
+			if(file.listFiles() != null)
+				for (File subFile : file.listFiles())
+					if(subFile.isDirectory())
+						delete(subFile);
+					else 
+						subFile.delete();
 			file.delete();
 		}
 		file.delete();
@@ -124,17 +129,32 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	private static boolean checkFlag(Map<String,Boolean> flags, String str) {
+		if(flags == null) return false;
+		if(flags.get(str) == null) return false;
+		return flags.get(str);
+	}
+	
 	/* copy(originalFile, copyFile)
 	 * copies all files from original file folder to the dir of copy file
 	 * if a copy of file exists already it will delete and replace it
 	 */
 	public static void copy(File original, File copy) {
+		copy(original, copy, new HashMap<String, Boolean>());
+	}
+	public static void copy(File original, File copy, Map<String,Boolean> flags) {
 		if(!original.exists()) {
 			System.err.println("Original file does not exist");
 			return;
 		}
-		if(!copy.getParentFile().exists()) copy.getParentFile().mkdirs();
-		if(copy.exists()) delete(copy);
+		if(copy.getParentFile() != null && !copy.getParentFile().exists())
+			copy.getParentFile().mkdirs();
+		if( flags != null && flags.get("deleteExisting") != null )
+			if(flags.get("deleteExisting") == true && copy.exists()) {
+	//			delete(copy);
+				System.out.println("DELETEING "+copy.getAbsolutePath());
+			}
 		
 		if(original.isDirectory()) {
 			File[] list = original.listFiles();
@@ -145,13 +165,29 @@ public class FileUtil {
 					copy(newOriginal,newCopy);
 				}
 		} else if(original.isFile()) {
+			if(copy.exists()) return;
 			try {
 				Files.copy(original.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				if(checkFlag(flags, "printOutput"))
+					System.out.println(original.getAbsolutePath() + " - > "+copy.getAbsolutePath());
 			} catch (Exception e) {
 				System.out.println( original.getAbsolutePath() );
 				System.out.println( copy.getAbsolutePath() );
 				e.printStackTrace();
 			}
 		}
+	}
+	public static ArrayList<String> readFile(File file) {
+		ArrayList<String> list = null;
+		
+		if(file == null || !file.exists()) return null;
+		try {
+			list = new ArrayList<String>();
+			Scanner scanner = new Scanner( file );
+			while(scanner.hasNextLine())
+				list.add(scanner.nextLine());
+			scanner.close();
+		} catch (FileNotFoundException e) {}
+		return list;
 	}
 }
