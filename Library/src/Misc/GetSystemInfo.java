@@ -8,12 +8,23 @@ import java.net.UnknownHostException;
 public class GetSystemInfo {
 	
 	public static String getSystemName() {
+//		try {
+//			return InetAddress.getLocalHost()+"";
+//		} catch (UnknownHostException e) {
+//			e.printStackTrace();
+//		}
+		
+		String hostname = "Unknown";
+
 		try {
-			return InetAddress.getLocalHost()+"";
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			InetAddress addr;
+			addr = InetAddress.getLocalHost();
+			hostname = addr.getHostName();
+		} catch (UnknownHostException ex) {
+			System.out.println("Hostname can not be resolved");
 		}
-		return null;
+		
+		return hostname;
 	}
 	
 	public static void installPipPackage(String str) {
