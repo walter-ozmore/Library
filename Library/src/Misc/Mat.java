@@ -1,9 +1,13 @@
 package Misc;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class Mat {
+	static Random r = new Random();
+	
 	public static double round(double num,int place) {
 		if(place < 0) return num;
 		num *= Math.pow(10, place);
@@ -75,6 +79,7 @@ public class Mat {
 			return -1;
 		}
 	}
+	
 	public static Boolean isNum(String num) {
 		if(num.length()==0) return false;
 		for(int z=0;z<num.length();z++)
@@ -92,5 +97,66 @@ public class Mat {
 				default: return false;
 			}
 		return true;
+	}
+	
+	// Random Normal
+	// Map of <standardDeviation, numOfRandom>
+	static Map<Double, Integer> normalMap = null;
+	static void initNormalMap() {
+		normalMap = new HashMap<Double, Integer>();
+		
+	}
+	public static double getNormalRandom(int count) {
+		double n = 0;
+		for(int a=0;a<count;a++)
+			n += Math.random();
+		n /= count;
+		return n;
+	}
+	public static void addToMap(int count) {
+		int totalNumbers = 100_000;
+		int range = 10_000;
+		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+		for(int z=0;z<=range;z++) map.put(z, 0);
+		for(int z=0;z<totalNumbers;z++) {
+			
+			double n = 0;
+			for(int a=0;a<count;a++)
+				n += Math.random();
+			n /= count;
+			
+			int num = (int)Math.round(n*range);
+			map.put(num, map.get(num) + 1);
+		}
+		
+		long sum = 0;
+		
+		for(int z=0;z<=range;z++) {
+			sum += z * map.get(z);
+		}
+		
+		double avg = (double)sum / totalNumbers;
+		double std = 0;
+		{//Caculate standard deveation
+			double a = 0;
+			for(int z=0;z<=range;z++) {
+				a += map.get(z) * Math.pow(avg - z, 2);
+			}
+			std = Math.sqrt( a/totalNumbers );
+		}
+		
+		
+//		for(int z=0;z<=range;z++)
+//			System.out.printf("%2d %8d %%%5.2f%n",z,map.get(z), ((double)map.get(z)/totalNumbers)*100);
+		System.out.printf("Avg: %.2f ",avg/range);
+		System.out.printf("Std: %.4f%n",std/range);
+		System.out.println();
+	}
+	public static double randomNormal(double mean, double standardDeviation, double min, double max) {
+		double re = 0;
+		do { 
+			re = r.nextGaussian(mean, standardDeviation);
+		} while(re < min || re > max);
+		return re;
 	}
 }

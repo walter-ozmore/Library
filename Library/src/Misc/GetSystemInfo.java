@@ -124,4 +124,13 @@ public class GetSystemInfo {
 			return true;
 		return false;
 	}
+	public static boolean isNmapInstalled() {
+		String[] list = runCommand("nmap");
+		if(list[0].contains("Nmap"))
+			return true;
+		return false;
+//		if(list[0].contains("is not recognized as an internal or external command"))
+//			return false;
+//		return true;
+	}
 }
