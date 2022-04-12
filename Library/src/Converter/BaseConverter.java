@@ -66,8 +66,28 @@ public class BaseConverter {
 			re += (int)( array[z] *Math.pow(Byte.MAX_VALUE, z) );
 		return re;
 	}
+	
+	public static int byteArrayToInt(byte[] array) {
+		int re = 0;
+		for(int z=array.length-1;z>=0;z--)
+			re += (int)( array[z] *Math.pow(Byte.MAX_VALUE, z) );
+		return re;
+	}
+	
 	public static byte[] longToByteArray(long value) {
 		byte[] re = new byte[8];
+		
+		for(int z=re.length-1;z>=0;z--) {
+			int s = (int) Math.pow(Byte.MAX_VALUE, z);
+			if( s <= value ){
+				re[z] = (byte) (value / s);
+				value -= s * re[z  ];
+			}
+		}
+		return re;
+	}
+	public static byte[] intToByteArray(long value) {
+		byte[] re = new byte[4];
 		
 		for(int z=re.length-1;z>=0;z--) {
 			int s = (int) Math.pow(Byte.MAX_VALUE, z);

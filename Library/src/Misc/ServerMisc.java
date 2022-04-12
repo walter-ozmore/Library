@@ -10,6 +10,13 @@ import java.io.OutputStream;
 import Converter.BaseConverter;
 
 public class ServerMisc {
+	public static void sendString(OutputStream out, String str) throws IOException {
+		byte[] aName = new byte[str.length()];
+		for(int z=0;z<str.length();z++) 
+			aName[z] = (byte) str.charAt(z);
+		out.write( BaseConverter.longToByteArray( aName.length ) );
+		out.write( aName );
+	}
 	
 	public static String getString(InputStream in) throws IOException {
 		byte[] temp = new byte[8];
@@ -26,20 +33,20 @@ public class ServerMisc {
 		
 		return str;
 	}
-	public static void sendString(OutputStream out, String str) throws IOException {
-		
-			byte[] aName = new byte[str.length()];
-			for(int z=0;z<str.length();z++) 
-				aName[z] = (byte) str.charAt(z);
-			out.write( BaseConverter.longToByteArray( aName.length ) );
-			out.write( aName );
-	}
-	//Files
-	/* 
-	 * @parm String str location of file on client
+	
+	/**
+	 * @parm OutputStream out
+	 * @parm File file:  The file or folder that will be sent
+	 * @parm String str: The destination of the file on the recipients device
 	 */
 	public static void sendFile(OutputStream out, File file, String str) throws IOException {
-		//*
+		System.out.println("Sending " + file.getAbsolutePath());
+		
+		if(file.isDirectory()) {
+			
+			return;
+		}
+		
 		InputStream in = new FileInputStream( file );
 		String name = str + file.getName();
 		byte[] aName = new byte[name.length()];
@@ -48,22 +55,19 @@ public class ServerMisc {
 		
 		//Send filename / path length
 		out.write( BaseConverter.longToByteArray( aName.length ) );
+		
 		//Send filename / path
 		out.write( aName );
-		//*/
+		
 		//Send file length
 		out.write( BaseConverter.longToByteArray(file.length()) );
 			
 		copy(new FileInputStream( file ),out);
 		in.close();
+		System.out.println("Sent");
 	}
-	static void copy(InputStream in, OutputStream out) throws IOException {
-		byte[] buf = new byte[8192];
-		int len = 0;
-		while ((len = in.read(buf)) != -1) {
-			out.write(buf, 0, len);
-		}
-	}
+	
+	
 	public static File getFile(InputStream in) throws IOException {
 		byte[] temp = new byte[8];
 		
@@ -84,11 +88,23 @@ public class ServerMisc {
 		long fileLength = BaseConverter.byteArrayToLong(temp);
 		
 		File parent = new File(name).getParentFile();
-		if(parent!=null)
+		if(parent != null)
 			parent.mkdirs();
+		
+		System.out.println( new File(name).getAbsolutePath() );
+		
 		copy(in, new FileOutputStream(name), fileLength );
 		return new File(name);
 	}
+	
+	static void copy(InputStream in, OutputStream out) throws IOException {
+		byte[] buf = new byte[8192];
+		int len = 0;
+		while ((len = in.read(buf)) != -1) {
+			out.write(buf, 0, len);
+		}
+	}
+	
 	static void copy(InputStream in, OutputStream out, long size) throws IOException {
 		int bufSize = 8192;
 		byte[] buf = new byte[bufSize];
@@ -96,7 +112,7 @@ public class ServerMisc {
 		while ((len = in.read(buf)) != -1) {
 			out.write(buf, 0, len);
 			size -= len;
-			if(len < size) {
+			if(size != -1 && len < size) {
 				bufSize = (int)size;
 				buf = new byte[bufSize];
 			}

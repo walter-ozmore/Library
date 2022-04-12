@@ -3,6 +3,35 @@ package Misc;
 import java.util.ArrayList;
 
 public class SDL {
+	
+	/**String[] splitLine(String str)
+	 * Splits the input string by space with the exception of if they are surrounded by quotes
+	 * @returns String[] A list of the split string
+	 */
+	public static String[] splitLine(String str) {
+		boolean qote = false;
+		String line = "";
+		ArrayList<String> list = new ArrayList<String>();
+		
+		for(int z=0;z<str.length();z++) {
+			char c = str.charAt(z);
+			if(c == '\"')
+				qote = !qote;
+			else if (c == ' ' && !qote){
+				list.add( line );
+				line = "";
+			} else
+				line += str.charAt(z);
+		}
+		if(line.length() > 0) list.add(line);
+		
+		// Convert arraylist to list
+		String[] re = new String[list.size()];
+		for(int z=0;z<list.size();z++)
+			re[z] = list.get(z);
+		return re;
+	}
+	
 	public static <T> void print(T var) {
 		System.out.print(var + "");
 	}
@@ -39,6 +68,23 @@ public class SDL {
 		println();
 	}
 
+	/**
+   * Causes the currently executing thread to sleep (temporarily cease
+   * execution) for the specified number of milliseconds, subject to
+   * the precision and accuracy of system timers and schedulers. The thread
+   * does not lose ownership of any monitors.
+   *
+   * @param  millis
+   *         the length of time to sleep in milliseconds
+   *
+   * @throws  IllegalArgumentException
+   *          if the value of {@code millis} is negative
+   *
+   * @throws  InterruptedException
+   *          if any thread has interrupted the current thread. The
+   *          <i>interrupted status</i> of the current thread is
+   *          cleared when this exception is thrown.
+   */
 	public static void sleep(long time) {
 		try {
 			Thread.sleep(time);
