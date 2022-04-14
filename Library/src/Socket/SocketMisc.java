@@ -8,16 +8,38 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import Converter.BaseConverter;
 import Misc.ConsoleColors;
-import Misc.SDL;
 import Misc.ServerMisc;
 
 public class SocketMisc {
 	// Set variables
 	static int bufSize = 8192;
-	public static final int lenOfControl = 1;
-	public static final byte[] exit = intToBytes(0);
-	public static final byte[] file = intToBytes(2);
+	public static final int exit = 0, ready = 1, str = 2, file = 3, command = 4, custom = 255;
+	
+	public static void sendString(InputStream in, OutputStream out, String var) throws IOException {
+		byte[] aName = new byte[var.length()];
+		for(int z=0;z<var.length();z++) 
+			aName[z] = (byte) var.charAt(z);
+		out.write( intToBytes( aName.length ) );
+		out.write( aName );
+	}
+	
+	public static String getString(InputStream in) throws IOException {
+		//getName Length
+		byte[] temp = new byte[4];
+		in.read(temp);
+		int strLength = (int) bytesToInt(temp);
+		
+		if(strLength == 0)
+			return "";
+		
+		byte[] aStr = new byte[ strLength ];
+		in.read( aStr );
+		String str = "";
+		for(int z=0;z<aStr.length;z++) str += (char)aStr[z];
+		return str;
+	}
 	
 	/**
 	 * @parm OutputStream out
@@ -26,9 +48,9 @@ public class SocketMisc {
 	 */
 	public static void sendFile(InputStream in, OutputStream out, File file, String str) throws IOException {
 		// Wait for client ready
-		int z = in.read();
+		in.read();
 		
-		out.write( 2 ); // Alert recipient that a file is being sent
+		out.write( SocketMisc.file ); // Alert recipient that a file is being sent
 		System.out.println("Sending " + file.getAbsolutePath());
 		
 		out.write( new byte[]{(byte)((file.isFile())?1:0)} );// Send control byte to indicate folder/file
@@ -92,23 +114,23 @@ public class SocketMisc {
 		}
 	}
 	
+	
+	
+	static byte[] intToBytes(int var) { return ByteBuffer.allocate(4).putInt(var).array(); }
+	static int bytesToInt(byte[] bytes) { return ByteBuffer.wrap(bytes).getInt(); }
 	static int getInt(InputStream in) throws IOException {
 		byte[] data = new byte[4];
 		in.read( data );
 		return bytesToInt( data );
 	}
 	
+	static byte[] longToBytes(long var) { return ByteBuffer.allocate(8).putLong(var).array(); }
+	static long bytesToLong(byte[] bytes) { return ByteBuffer.wrap(bytes).getLong(); }
 	static long getLong(InputStream in) throws IOException {
 		byte[] data = new byte[8];
 		in.read( data );
 		return bytesToLong( data );
 	}
-	
-	static byte[] intToBytes(int var) { return ByteBuffer.allocate(4).putInt(var).array(); }
-	static int bytesToInt(byte[] bytes) { return ByteBuffer.wrap(bytes).getInt(); }
-	
-	static byte[] longToBytes(long var) { return ByteBuffer.allocate(8).putLong(var).array(); }
-	static long bytesToLong(byte[] bytes) { return ByteBuffer.wrap(bytes).getLong(); }
 	
 	static byte[] stringToBytes(String var) {
 		byte[] bytes = var.getBytes(); // Convert string in to byte values
